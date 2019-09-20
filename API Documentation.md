@@ -1,6 +1,8 @@
-Recomendamos que utilize o software Postman para consumir a API: https://www.getpostman.com/
+### Recomendation
 
-Após instala-lo, você poderá importar a nossa biblioteca com todas as requisições configuradas através do botão abaixo
+We recomend that you use Postman to consume our API on dev environment : https://www.getpostman.com/
+
+After Install, you can import our collection with all set up requests through the button below
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d72d3fa7fd6e168e69ab)
 
