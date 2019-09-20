@@ -1,3 +1,9 @@
+
+### Methods
+- [get_drivers](#get_drivers)
+- [get_driver](#get_driver)
+- [register_driver](#register_driver)
+
 **get_drivers**
 ----
   Return a list of all drivers.
