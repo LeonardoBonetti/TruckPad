@@ -1,3 +1,9 @@
+Recomendamos que utilize o software Postman para consumir a API: https://www.getpostman.com/
+
+Após instala-lo, você poderá importar a nossa biblioteca com todas as requisições configuradas através do botão abaixo
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d72d3fa7fd6e168e69ab)
+
 
 ### Methods
 - [get_drivers](#get_drivers)
