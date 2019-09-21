@@ -18,7 +18,7 @@ After Install, you can import our collection with all set up requests through th
 
 * **URL**
 
-  /api/v1.0/driver
+  /api/v1.0/drivers
 
 * **Method:**
 
@@ -60,7 +60,7 @@ After Install, you can import our collection with all set up requests through th
 
   ```javascript
     $.ajax({
-      url: "localhost/api/v1.0/driver",
+      url: "localhost/api/v1.0/drivers",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -75,7 +75,7 @@ After Install, you can import our collection with all set up requests through th
 
 * **URL**
 
-  /api/v1.0/driver/<driver_id>
+  /api/v1.0/drivers/<driver_id>
 
 * **Method:**
 
@@ -115,7 +115,7 @@ After Install, you can import our collection with all set up requests through th
 
   ```javascript
     $.ajax({
-      url: "localhost/api/v1.0/driver/<driver_id>",
+      url: "localhost/api/v1.0/drivers/<driver_id>",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -130,7 +130,7 @@ After Install, you can import our collection with all set up requests through th
 
 * **URL**
 
-  /api/v1.0/driver
+  /api/v1.0/drivers
 
 * **Method:**
 
@@ -194,7 +194,7 @@ After Install, you can import our collection with all set up requests through th
 
   ```javascript
     $.ajax({
-      url: "localhost/api/v1.0/driver/<driver_id>",
+      url: "localhost/api/v1.0/drivers/<driver_id>",
       dataType: "json",
       type : "GET",
       success : function(r) {
