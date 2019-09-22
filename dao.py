@@ -5,19 +5,19 @@ SQL_INSERT_DRIVER = "INSERT INTO Drivers(Name,LastName,DateOfBirth,FK_Gender,FK_
                     "VALUES(%s,%s,%s,%s,%s,%s)"
 
 SQL_UPDATE_DRIVER = "UPDATE Drivers " \
-                    "set Name=%s, LastName=%s ,DateOfBirth=%s ,FK_Gender=%s ,FK_CNHTypes=%s,OwnVehicle=%s ) WHERE ID = %s;"
+                    "set Name=%s, LastName=%s ,DateOfBirth=%s ,FK_Gender=%s ,FK_CNHTypes=%s,OwnVehicle=%s WHERE ID = %s;"
 
 SQL_LIST_DRIVERS = "SELECT ID,Name,LastName,DateOfBirth,FK_Gender,FK_CNHTypes,OwnVehicle from Drivers"
 
-SQL_GET_DRIVERS_BY_ID = "SELECT ID,Name,LastName,DateOfBirth,FK_Gender,FK_CNHTypes,OwnVehicle from Drivers WHERE ID = %s;"
+SQL_GET_DRIVER_BY_ID = "SELECT ID,Name,LastName,DateOfBirth,FK_Gender,FK_CNHTypes,OwnVehicle from Drivers WHERE ID = %s;"
 
 SQL_INSERT_ITINERARIE = "INSERT INTO Itineraries(FK_Drivers,Loaded,FK_TruckType,OriginLat,OriginLong,DestinationLat,DestinationLong,Finished) " \
                     "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
 
-SQL_UPDATE_ITINERARIE = "UPDATE Itineraries " \
-                    "set FK_Drivers=%s, Loaded=%s ,FK_TruckType=%s ,OriginLat=%s ,OriginLong=%s, DestinationLat=%s, DestinationLong=%s, Finished=%s" \
-                    " WHERE ID = %s;"
+SQL_FINISH_ITINERARIE = "UPDATE Itineraries set Finished = 1 WHERE ID = %s;"
 
+SQL_GET_ITINERARIE_BY_ID = "SELECT ID,FK_Drivers,Loaded,FK_TruckType,OriginLat,OriginLong,DestinationLat,DestinationLong,Finished" \
+                           " from Itineraries WHERE ID = %s;"
 
 class DriverDao:
     def __init__(self, db):
@@ -32,9 +32,9 @@ class DriverDao:
             drivers.append(sql_driver_to_obj(dict_list[i]))
         return drivers
 
-    def get_drivers_by_id(self, id):
+    def get_driver_by_id(self, id):
         cursor = self.__db.connection.cursor()
-        cursor.execute(SQL_GET_DRIVERS_BY_ID, (id,))
+        cursor.execute(SQL_GET_DRIVER_BY_ID, (id,))
         dict_list = recordset_to_dict(cursor)
         if len(dict_list) == 0:
             return None
@@ -55,19 +55,34 @@ class DriverDao:
         self.__db.connection.commit()
         return driver
 
+
+class ItinerarieDao:
+    def __init__(self, db):
+        self.__db = db
+
     def save_itinerarie(self, itinerarie):
         cursor = self.__db.connection.cursor()
-        if itinerarie.id:
-            cursor.execute(SQL_UPDATE_ITINERARIE,
-                           (itinerarie.driver_id, itinerarie.loaded, itinerarie.truck_type_id, itinerarie.origin_lat,
-                            itinerarie.origin_long,itinerarie.destination_lat,itinerarie.destination_long, itinerarie.finished, itinerarie.id))
-        else:
-            cursor.execute(SQL_INSERT_ITINERARIE,
-                           (itinerarie.driver_id, itinerarie.loaded, itinerarie.truck_type_id, itinerarie.origin_lat,
-                            itinerarie.origin_long, itinerarie.destination_lat, itinerarie.destination_long, itinerarie.finished))
-            itinerarie.id = cursor.lastrowid
+        cursor.execute(SQL_INSERT_ITINERARIE,
+                       (itinerarie.driver_id, itinerarie.loaded, itinerarie.truck_type_id, itinerarie.origin_lat,
+                        itinerarie.origin_long, itinerarie.destination_lat, itinerarie.destination_long,
+                        itinerarie.finished))
+        itinerarie.id = cursor.lastrowid
         self.__db.connection.commit()
         return itinerarie
+
+    def get_itinerarie_by_id(self, id):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_GET_ITINERARIE_BY_ID, (id,))
+        dict_list = recordset_to_dict(cursor)
+        if len(dict_list) == 0:
+            return None
+        else:
+            driver = sql_itinerarie_to_obj(dict_list[0])
+            return driver
+
+    def finish_itinerarie(self, itinerarie):
+        self.__db.connection.cursor().execute(SQL_FINISH_ITINERARIE, (itinerarie.id,))
+        self.__db.connection.commit()
 
 
 def recordset_to_dict(cursor):
@@ -79,13 +94,27 @@ def recordset_to_dict(cursor):
     return json_data
 
 
-def sql_driver_to_obj(sql_driver):
+def sql_driver_to_obj(sql_obj):
     driver = Driver(
-        sql_driver['Name'],
-        sql_driver['LastName'],
-        sql_driver['DateOfBirth'],
-        sql_driver['FK_Gender'],
-        sql_driver['FK_CNHTypes'],
-        sql_driver['OwnVehicle'],
-        sql_driver['ID'])
+        sql_obj['Name'],
+        sql_obj['LastName'],
+        sql_obj['DateOfBirth'],
+        sql_obj['FK_Gender'],
+        sql_obj['FK_CNHTypes'],
+        sql_obj['OwnVehicle'],
+        sql_obj['ID'])
     return driver
+
+
+def sql_itinerarie_to_obj(sql_obj):
+    itinerarie = Itinerarie(
+        sql_obj['FK_Drivers'],
+        sql_obj['Loaded'],
+        sql_obj['FK_TruckType'],
+        sql_obj['OriginLat'],
+        sql_obj['OriginLong'],
+        sql_obj['DestinationLat'],
+        sql_obj['DestinationLong'],
+        sql_obj['Finished'],
+        sql_obj['ID'])
+    return itinerarie
