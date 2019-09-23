@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, abort, make_response, request
-from models import Driver, Itinerarie
 from flask_mysqldb import MySQL
-from dao import DriverDao, ItinerarieDao
-import marshmallow_validation,helpers
-from gmaps import Address
+
+from app.dao import DriverDao, ItinerarieDao
+from app.models import Driver, Itinerarie
+from app.gmaps import Address
+from app.schema_validation import DriverSchema, DriversSchema, ItinerarieSchema
+from app.helpers import str_to_bool
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -12,9 +14,9 @@ db = MySQL(app)
 driver_dao = DriverDao(db)
 itinerarie_dao = ItinerarieDao(db)
 
-driver_schema = marshmallow_validation.DriverSchema()
-get_drivers_schema = marshmallow_validation.DriversSchema()
-itinerarie_schema = marshmallow_validation.ItinerarieSchema()
+driver_schema = DriverSchema()
+get_drivers_schema = DriversSchema()
+itinerarie_schema = ItinerarieSchema()
 
 
 # Validado Marshmallow
@@ -26,7 +28,7 @@ def get_drivers():
             jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),
             400)
 
-    has_own_vehicle = helpers.str_to_bool(request.args.get('own_vehicle', None))
+    has_own_vehicle = str_to_bool(request.args.get('own_vehicle', None))
 
     drivers_json = []
     for driver in driver_dao.list_drivers(has_own_vehicle):
@@ -118,9 +120,9 @@ def register_itinerarie():
         request_json.get("driver_id", None),
         request_json.get("loaded", None),
         request_json.get("truck_type_id", None),
+        request_json.get("finished", None),
         request_json.get("load_date_time", None),
         request_json.get("unload_date_time", None),
-        request_json.get("finished", None),
         Address(request_json.get("origin_address", None), request_json.get("origin_street_number", None)),
         Address(request_json.get("destination_address", None), request_json.get("destination_street_number", None))
     )
@@ -150,22 +152,18 @@ def get_itineraries():
     loaded = request.args.get('loaded', None)
     finished = request.args.get('finished', None)
     try:
-        loaded = helpers.str_to_bool(loaded)
-        finished = helpers.str_to_bool(finished)
+        loaded = str_to_bool(loaded)
+        finished = str_to_bool(finished)
     except ValueError:
         return make_response(jsonify({'return_message': 'there is an invalid bool in parameters'}), 400)
 
     itineraries = itinerarie_dao.get_itineraries(initial_load_period, final_load_period, truck_type, loaded, finished)
     itineraries_json = []
-    for driver in itineraries:
-        itineraries_json.append(driver.to_json())
+    for itinerarie in itineraries:
+        itineraries_json.append(itinerarie.to_json())
     return jsonify({'meta': {'total_itineraries': itineraries_json.__len__()}, 'itineraries': itineraries_json}), 200
 
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'return_message': error.description['message']}), 404)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

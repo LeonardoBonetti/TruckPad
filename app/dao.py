@@ -1,5 +1,5 @@
-from models import Itinerarie, Driver
-import json, helpers
+from app.models import Itinerarie, Driver
+from app.gmaps import Address
 
 SQL_INSERT_DRIVER = "INSERT INTO Drivers(Name,LastName,DateOfBirth,FK_Gender,FK_CNHTypes,OwnVehicle,InsertDate) " \
                     "VALUES(%s,%s,%s,%s,%s,%s,UTC_TIMESTAMP())"
@@ -133,13 +133,28 @@ def sql_driver_to_obj(sql_obj):
 
 def sql_itinerarie_to_obj(sql_obj):
     itinerarie = Itinerarie(
-        sql_obj.get('FK_Drivers', None),
+        sql_obj.get('IDDriver', None),
         sql_obj.get('Loaded', None),
         sql_obj.get('FK_TruckType', None),
         sql_obj.get('Finished', None),
         sql_obj.get('LoadDateTime', None),
         sql_obj.get('UnLoadDateTime', None),
-        sql_obj.get('origin_address', None),
-        sql_obj.get('destination_address', None),
-        sql_obj.get('ID', None))
+        Address(
+            sql_obj.get('OrigAddress', None),
+            sql_obj.get('OrigStreetNumber', None),
+            sql_obj.get('OrigLatitude', None),
+            sql_obj.get('OrigLongitude', None),
+            sql_obj.get('OrigState', None),
+            sql_obj.get('OrigCity', None)
+        ),
+        Address(
+            sql_obj.get('DestAddress', None),
+            sql_obj.get('DestStreetNumber', None),
+            sql_obj.get('DestLatitude', None),
+            sql_obj.get('DestLongitude', None),
+            sql_obj.get('DestState', None),
+            sql_obj.get('DestCity', None)
+        ),
+        sql_obj.get('IDItinerarie', None),
+        sql_obj.get('TruckTypeDescription', None))
     return itinerarie
