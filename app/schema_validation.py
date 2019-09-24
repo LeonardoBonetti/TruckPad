@@ -5,7 +5,7 @@ falsy_values = ['false', '0', 'False', False]
 
 
 class DriversSchema(Schema):
-    own_vehicle = fields.Boolean(truthy=set(['true', '1', 'True', True]), falsy=set(['false', '0', 'False', False]))
+    own_vehicle = fields.Boolean(truthy=truthy_values, falsy=falsy_values)
 
 
 class DriverSchema(Schema):
@@ -15,17 +15,14 @@ class DriverSchema(Schema):
     date_of_birth = fields.DateTime(required=True)
     gender_id = fields.Int(required=True)
     cnh_type_id = fields.Int(required=True)
-    own_vehicle = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]),
-                                 falsy=set(['false', '0', 'False', False]))
+    own_vehicle = fields.Boolean(required=True, truthy=truthy_values, falsy=falsy_values)
 
 
 class ItinerarieSchema(Schema):
     driver_id = fields.Int(required=True)
-    loaded = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]),
-                            falsy=set(['false', '0', 'False', False]))
+    loaded = fields.Boolean(required=True, truthy=truthy_values, falsy=falsy_values)
     truck_type_id = fields.Int(required=True)
-    finished = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]),
-                              falsy=set(['false', '0', 'False', False]))
+    finished = fields.Boolean(required=True, truthy=truthy_values, falsy=falsy_values)
     load_date_time = fields.DateTime(required=True)
     unload_date_time = fields.DateTime(required=True)
     origin_address = fields.Str(required=True)
@@ -48,7 +45,7 @@ class GetItinerariesSchema(Schema):
     city = fields.Str()
 
 
-class GetGroupedItinerariesSchema(Schema):
+class PeriodicalItinerariesReportSchema(Schema):
     loaded = fields.Boolean(truthy=truthy_values, falsy=falsy_values)
     periodical_type = fields.Str(required=True, validate=[lambda x: x in ['monthly', 'daily', 'yearly']],
                               error_messages={

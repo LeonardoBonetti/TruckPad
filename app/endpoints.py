@@ -2,10 +2,10 @@ from flask import Flask, jsonify, abort, make_response, request
 from flask_mysqldb import MySQL
 
 from app.dao import DriverDao, ItinerarieDao
-from app.models import Driver, Itinerarie, ItinerariesGroupedReport
+from app.models import Driver, Itinerarie, ItinerariesPeriodicalReport
 from app.gmaps import Address
 from app.schema_validation import (
-    DriverSchema, DriversSchema, ItinerarieSchema, FinishItinerarie, GetItinerariesSchema, GetGroupedItinerariesSchema
+    DriverSchema, DriversSchema, ItinerarieSchema, FinishItinerarie, GetItinerariesSchema, PeriodicalItinerariesReportSchema
 )
 from app.helpers import str_to_bool
 
@@ -18,13 +18,12 @@ itinerarie_dao = ItinerarieDao(db)
 
 driver_schema = DriverSchema()
 get_drivers_schema = DriversSchema()
-itinerarie_schema = ItinerarieSchema()
+register_itinerarie_schema = ItinerarieSchema()
 finish_itinerarie_schema = FinishItinerarie()
 get_itineraries_schema = GetItinerariesSchema()
-get_grouped_itineraries_schema = GetGroupedItinerariesSchema()
+periodical_itineraries_report_schema = PeriodicalItinerariesReportSchema()
 
-
-# Validado Marshmallow
+# Pesquisa pelos motoristas com um parâmetro
 @app.route('/api/v1.0/drivers', methods=['GET'])
 def get_drivers():
     errors = get_drivers_schema.validate(request.args)
@@ -41,7 +40,6 @@ def get_drivers():
     return jsonify({'meta': {'total_drivers': drivers_json.__len__()}, 'drivers': drivers_json}), 200
 
 
-# Validado
 @app.route('/api/v1.0/drivers/<driver_id>', methods=['GET'])
 def get_driver(driver_id):
     if not str.isdigit(driver_id):
@@ -54,7 +52,6 @@ def get_driver(driver_id):
         abort(404, {'message': 'Driver do not exist'})
 
 
-# Validado Marshmallow
 @app.route('/api/v1.0/drivers', methods=['POST'])
 def register_driver():
     if request.get_json() is None:
@@ -79,7 +76,6 @@ def register_driver():
     return jsonify({'driver': driver.to_json(), 'return_message': 'Driver Registered'}), 201
 
 
-# Validado Marshmallow
 @app.route('/api/v1.0/drivers/<int:driver_id>', methods=['PUT'])
 def update_driver(driver_id):
     if request.get_json() is None:
@@ -111,13 +107,12 @@ def update_driver(driver_id):
         abort(404, {'message': 'Driver do not exist'})
 
 
-# Validado Marshmallow
 @app.route('/api/v1.0/itineraries', methods=['POST'])
 def register_itinerarie():
     if request.get_json() is None:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
     request_json = request.get_json()
-    errors = itinerarie_schema.validate(request_json)
+    errors = register_itinerarie_schema.validate(request_json)
     if errors:
         return make_response(
             jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),
@@ -139,7 +134,6 @@ def register_itinerarie():
     return jsonify({'itinerarie': itinerarie.to_json(), 'return_message': 'Itinerarie Registered'}), 201
 
 
-# validado marshmallow
 @app.route('/api/v1.0/itineraries/finish/<itinerarie_id>', methods=['PUT'])
 def finish_itinerarie(itinerarie_id):
     errors = finish_itinerarie_schema.validate({'itinerarie_id': itinerarie_id})
@@ -157,7 +151,6 @@ def finish_itinerarie(itinerarie_id):
         abort(404)
 
 
-# validado marshmallow
 @app.route('/api/v1.0/itineraries', methods=['GET'])
 def get_itineraries():
     errors = get_itineraries_schema.validate(request.args)
@@ -181,10 +174,10 @@ def get_itineraries():
         itineraries_json.append(itinerarie.to_json())
     return jsonify({'meta': {'total_itineraries': itineraries_json.__len__()}, 'itineraries': itineraries_json}), 200
 
-#Validado marshmallow
+
 @app.route('/api/v1.0/itineraries/grouped', methods=['GET'])
-def get_grouped_itineraries():
-    errors = get_grouped_itineraries_schema.validate(request.args)
+def get_periodical_itineraries_report():
+    errors = periodical_itineraries_report_schema.validate(request.args)
     if errors:
         return make_response(
             jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),
@@ -195,12 +188,12 @@ def get_grouped_itineraries():
     initial_load_period = request.args.get('initial_load_period', None)
     final_load_period = request.args.get('final_load_period', None)
 
-    grouped_itineraries_reports = itinerarie_dao.get_grouped_itineraries_report(periodical_type, loaded, initial_load_period, final_load_period)
+    periodic_reports = itinerarie_dao.get_itineraries_periodic_reports(periodical_type, loaded, initial_load_period, final_load_period)
 
-    itineraries_report = ItinerariesGroupedReport(periodical_type,initial_load_period,final_load_period,loaded,[])
+    itineraries_report = ItinerariesPeriodicalReport(periodical_type, initial_load_period, final_load_period, loaded, [] )
 
-    for report in grouped_itineraries_reports:
-        itineraries_report.periodic_reports.append(report.to_json())
+    for periodic in periodic_reports:
+        itineraries_report.periodic_reports.append(periodic.to_json())
 
     return jsonify(itineraries_report.to_json()), 200
 

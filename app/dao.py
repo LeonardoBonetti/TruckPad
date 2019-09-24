@@ -1,4 +1,4 @@
-from app.models import Itinerarie, Driver, ItinerariesGroupedReport, PeriodicReport
+from app.models import Itinerarie, Driver, ItinerariesPeriodicalReport, PeriodicReport
 from app.gmaps import Address
 
 SQL_INSERT_DRIVER = "INSERT INTO Drivers(Name,LastName,DateOfBirth,FK_Gender,FK_CNHTypes,OwnVehicle,InsertDate) " \
@@ -110,7 +110,7 @@ class ItinerarieDao:
         self.__db.connection.commit()
         return address
 
-    def get_grouped_itineraries_report(self, periodical_type, loaded, initial_load_period, final_load_period):
+    def get_itineraries_periodic_reports(self, periodical_type, loaded, initial_load_period, final_load_period):
         cursor = self.__db.connection.cursor()
         if periodical_type == 'daily':
             cursor.callproc('GetItinerariesGroupedByDay',

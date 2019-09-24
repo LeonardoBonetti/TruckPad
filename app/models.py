@@ -57,7 +57,7 @@ class Itinerarie:
         }
 
 
-class ItinerariesGroupedReport:
+class ItinerariesPeriodicalReport:
     def __init__(self, periodical_type, initial_period, final_period, loaded, periodic_reports):
         self.periodical_type = periodical_type
         self.initial_period = initial_period
