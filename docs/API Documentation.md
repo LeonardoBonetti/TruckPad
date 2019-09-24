@@ -1,20 +1,31 @@
-### Recomendation
+### Recomendação
 
-We recomend that you use Postman to consume our API on dev environment : https://www.getpostman.com/
+Recomendamos que utilize o Postman para consumir a API enquanto desenvolve e faz testes:
+https://www.getpostman.com/
 
-After Install, you can import our collection with all set up requests through the button below
+Após a instalação, você poderá importar a nossa coleção de requisições com toda a configuração pronta através do botão abaixo:
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d72d3fa7fd6e168e69ab)
 
+Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/run-collection/d72d3fa7fd6e168e69ab
 
-### Methods
-- [get_drivers](#get_drivers)
-- [get_driver](#get_driver)
-- [register_driver](#register_driver)
+
+### Métodos
+- **Driver**
+    - [get_drivers](#get_drivers): Retorna uma lista de todos os motoristas.
+    - [get_driver](#get_driver): Retorna um motorista a partir de seu ID.
+    - [register_driver](#register_driver): Cadastra um motorista no sistema.
+    - [update_driver](#update_driver): Atualiza os dados  de um motorista no sistema.
+
+- **Itinerarie**
+    - [get_itineraries](#get_itineraries): Retorna uma lista de itinerários cadastrados a partir de alguns filtros.
+    - [register_itinerarie](#register_itinerarie): Cadastra um itinerário no sistema.
+    - [finish_itinerarie](#finish_itinerarie): Finaliza um itinerári.
+    - [get_grouped_itineraries](#get_grouped_itineraries): Agrupa e contabiliza o número itinerários(motoristas que passaram pelo terminal).
 
 **get_drivers**
 ----
-  Return a list of all drivers.
+  Retorna uma lista de motoristas e suas informações, possui um parâmetro `boolean` *own_vehicle* que filtra motoristas que possuem veículo próprio ou não.
 
 * **URL**
 
@@ -26,7 +37,13 @@ After Install, you can import our collection with all set up requests through th
   
 *  **URL Params**
 
+   **Required:**
+   
    None
+   
+    **Optional:**
+ 
+   `own_vehicle=[boolean]`
 
 * **Data Params**
 
@@ -34,22 +51,10 @@ After Install, you can import our collection with all set up requests through th
 
 * **Success Response:**
 
-  * **Code:** 200 OK<br />
+  * **Code:** 200 OK
     **Content:** 
     ```
-    {
-      "drivers": [
-        {
-          "cnh_type_id": 2,
-          "date_of_birth": "1998-05-04 00:00:00",
-          "gender_id": 1,
-          "id": 1,
-          "last_name": "Bonetti",
-          "name": "Leonardo"
-        },
-        ...
-      ]
-    }
+    # WIP
     ```
  
 * **Error Response:**
@@ -71,19 +76,25 @@ After Install, you can import our collection with all set up requests through th
   
 **get_driver**
 ----
-  Search for a driver through your ID.
+  Busca um motorista e suas informações a partir de seu ID
 
 * **URL**
 
-  /api/v1.0/drivers/<driver_id>
+  /api/v1.0/drivers/:driver_id
 
 * **Method:**
 
   `GET`
   
 *  **URL Params**
+ 
+   **Required:**
 
-   None
+   `driver_id=[int]`
+   
+    **Optional:**
+    
+    None
 
 * **Data Params**
 
@@ -94,23 +105,16 @@ After Install, you can import our collection with all set up requests through th
   * **Code:** 200 OK <br />
     **Content:** 
     ```
-    {
-      "driver": {
-        "cnh_type_id": 1,
-        "date_of_birth": "2019-12-01 00:00:00S",
-        "gender_id": 2,
-        "id": 4,
-        "last_name": "Last Name",
-        "name": "Name"
-      }
-    }
+    # WIP
     ```
  
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
-    **Content:** `{'error': 'Not found'}`
-
+    **Content:** 
+    ```
+    # WIP
+    ```
 * **Sample Call:**
 
   ```javascript
@@ -126,7 +130,7 @@ After Install, you can import our collection with all set up requests through th
   
 **register_driver**
 ----
-  Register a new driver passing a Driver JSON Object.
+  Cadastra um novo motorista no sistema a partir de informações no formato `application/json` inseridas no `request body`
 
 * **URL**
 
@@ -138,20 +142,26 @@ After Install, you can import our collection with all set up requests through th
   
 *  **URL Params**
 
-   None
+    **Required:**
+
+    None
+   
+    **Optional:**
+    
+    None
 
 * **Data Params**
 
   * **Data Object:** 
   ```
-    {
-      "cnh_type_id": 1,
-      "date_of_birth": "2019-12-01 00:00:00",
-      "gender_id": 2,
-      "id": 4,
-      "last_name": "Last Name",
-      "name": "Name"
-    }
+  {
+    "cnh_type_id" : 1,
+    "date_of_birth": "1998-12-14 00:00:00",
+    "gender_id": 1,
+    "last_name": "Bonetti",
+    "name": "Leo",
+    "own_vehicle": false
+  }
   ```
 
 * **Success Response:**
@@ -159,17 +169,7 @@ After Install, you can import our collection with all set up requests through th
   * **Code:** 201 CREATED <br />
     **Content:** 
     ```
-    {
-      "driver": {
-        "cnh_type_id": 1,
-        "date_of_birth": "2019-12-01 00:00:00",
-        "gender_id": 2,
-        "id": 4,
-        "last_name": "Last Name",
-        "name": "Name"
-      },
-      "return_message": "Driver Registered"
-    }
+    # WIP
     ```
  
 * **Error Response:**
@@ -177,26 +177,17 @@ After Install, you can import our collection with all set up requests through th
   * **Code:** 400 BAD REQUEST <br />
     **Content:** 
     ```
-    {
-      "driver": {
-        "cnh_type_id": 1,
-        "date_of_birth": "2019-12-01 00:00:00",
-        "gender_id": 2,
-        "id": 4,
-        "last_name": "Last Name",
-        "name": "Name"
-      },
-      "return_message": "Driver Registered"
-    }
+    # WIP
     ```
 
 * **Sample Call:**
 
   ```javascript
     $.ajax({
-      url: "localhost/api/v1.0/drivers/<driver_id>",
+      url: "localhost/api/v1.0/drivers",
       dataType: "json",
-      type : "GET",
+      type : "POST",
+      data: JSON.stringify(data),
       success : function(r) {
         console.log(r);
       }
