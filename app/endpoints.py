@@ -181,7 +181,7 @@ def get_itineraries():
         itineraries_json.append(itinerarie.to_json())
     return jsonify({'meta': {'total_itineraries': itineraries_json.__len__()}, 'itineraries': itineraries_json}), 200
 
-
+#Validado marshmallow
 @app.route('/api/v1.0/itineraries/grouped', methods=['GET'])
 def get_grouped_itineraries():
     errors = get_grouped_itineraries_schema.validate(request.args)
