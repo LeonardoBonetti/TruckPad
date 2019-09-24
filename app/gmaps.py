@@ -1,8 +1,8 @@
 import googlemaps
 
 class Address:
-    def __init__(self, address=None, street_number=None, lat=None, lng=None, state=None, city=None):
-        self.id = None
+    def __init__(self, address=None, street_number=None, lat=None, lng=None, state=None, city=None, id=None):
+        self.id = id
         self.address = address
         self.street_number = street_number
         self.lat = lat

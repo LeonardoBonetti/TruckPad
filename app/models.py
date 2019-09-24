@@ -25,7 +25,8 @@ class Driver:
 
 class Itinerarie:
     def __init__(self, driver_id, loaded, truck_type_id, finished,
-                 load_date_time, unload_date_time, origin_address, destination_address, id=None, truck_type_description=None):
+                 load_date_time, unload_date_time, origin_address, destination_address, id=None,
+                 truck_type_description=None):
         self.id = id
         self.driver_id = driver_id
         self.loaded = loaded
@@ -56,3 +57,31 @@ class Itinerarie:
         }
 
 
+class ItinerariesGroupedReport:
+    def __init__(self, periodical_type, initial_period, final_period, loaded, periodic_reports):
+        self.periodical_type = periodical_type
+        self.initial_period = initial_period
+        self.final_period = final_period
+        self.loaded = loaded
+        self.periodic_reports = periodic_reports
+
+    def to_json(self):
+        return {
+            'periodical_type': self.periodical_type,
+            'initial_period': self.initial_period,
+            'final_period': self.final_period,
+            'loaded': self.loaded,
+            'periodic_reports': self.periodic_reports,
+        }
+
+
+class PeriodicReport:
+    def __init__(self, period, count):
+        self.period = period
+        self.count = count
+
+    def to_json(self):
+        return {
+            'period': self.period,
+            'count': self.count
+        }

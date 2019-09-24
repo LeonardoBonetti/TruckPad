@@ -1,4 +1,4 @@
-from app.models import Itinerarie, Driver
+from app.models import Itinerarie, Driver, ItinerariesGroupedReport, PeriodicReport
 from app.gmaps import Address
 
 SQL_INSERT_DRIVER = "INSERT INTO Drivers(Name,LastName,DateOfBirth,FK_Gender,FK_CNHTypes,OwnVehicle,InsertDate) " \
@@ -80,7 +80,7 @@ class ItinerarieDao:
 
     def get_itinerarie_by_id(self, id):
         cursor = self.__db.connection.cursor()
-        cursor.execute(SQL_GET_ITINERARIE_BY_ID, (id,))
+        cursor.callproc('GetItineraries', [None, None, None, None, None, id])
         dict_list = recordset_to_dict(cursor)
         if len(dict_list) == 0:
             return None
@@ -92,9 +92,10 @@ class ItinerarieDao:
         self.__db.connection.cursor().execute(SQL_FINISH_ITINERARIE, (itinerarie.id,))
         self.__db.connection.commit()
 
-    def get_itineraries(self, initial_load_period, final_load_period, truck_type, loaded, finished):
+    def get_itineraries(self, initial_load_period, final_load_period, truck_type, loaded, finished, state, city):
         cursor = self.__db.connection.cursor()
-        cursor.callproc('GetItineraries', [initial_load_period, final_load_period, truck_type, loaded, finished])
+        cursor.callproc('GetItineraries',
+                        [initial_load_period, final_load_period, truck_type, loaded, finished, state, city, None])
         dict_list = recordset_to_dict(cursor)
         itineraries = []
         for i in range(0, dict_list.__len__()):
@@ -108,6 +109,24 @@ class ItinerarieDao:
         address.id = cursor.lastrowid
         self.__db.connection.commit()
         return address
+
+    def get_grouped_itineraries_report(self, periodical_type, loaded, initial_load_period, final_load_period):
+        cursor = self.__db.connection.cursor()
+        if periodical_type == 'daily':
+            cursor.callproc('GetItinerariesGroupedByDay',
+                            [initial_load_period, final_load_period, loaded])
+        elif periodical_type == 'monthly':
+            cursor.callproc('GetItinerariesGroupedByMonth',
+                            [initial_load_period, final_load_period, loaded])
+        elif periodical_type == 'yearly':
+            cursor.callproc('GetItinerariesGroupedByYear',
+                            [initial_load_period, final_load_period, loaded])
+
+        dict_list = recordset_to_dict(cursor)
+        reports = []
+        for i in range(0, dict_list.__len__()):
+            reports.append(sql_periodic_reports_to_sql(dict_list[i]))
+        return reports
 
 
 def recordset_to_dict(cursor):
@@ -135,7 +154,7 @@ def sql_itinerarie_to_obj(sql_obj):
     itinerarie = Itinerarie(
         sql_obj.get('IDDriver', None),
         sql_obj.get('Loaded', None),
-        sql_obj.get('FK_TruckType', None),
+        sql_obj.get('TruckTypeID', None),
         sql_obj.get('Finished', None),
         sql_obj.get('LoadDateTime', None),
         sql_obj.get('UnLoadDateTime', None),
@@ -145,7 +164,8 @@ def sql_itinerarie_to_obj(sql_obj):
             sql_obj.get('OrigLatitude', None),
             sql_obj.get('OrigLongitude', None),
             sql_obj.get('OrigState', None),
-            sql_obj.get('OrigCity', None)
+            sql_obj.get('OrigCity', None),
+            sql_obj.get('OrigAdressID', None)
         ),
         Address(
             sql_obj.get('DestAddress', None),
@@ -153,8 +173,14 @@ def sql_itinerarie_to_obj(sql_obj):
             sql_obj.get('DestLatitude', None),
             sql_obj.get('DestLongitude', None),
             sql_obj.get('DestState', None),
-            sql_obj.get('DestCity', None)
+            sql_obj.get('DestCity', None),
+            sql_obj.get('DestAdressID', None)
         ),
         sql_obj.get('IDItinerarie', None),
         sql_obj.get('TruckTypeDescription', None))
     return itinerarie
+
+
+def sql_periodic_reports_to_sql(sql_obj):
+    periodic = PeriodicReport(sql_obj.get('Period', None), sql_obj.get('Itineraries', None))
+    return periodic

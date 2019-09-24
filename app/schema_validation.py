@@ -1,8 +1,11 @@
 from marshmallow import Schema, fields, validates, ValidationError
 
+truthy_values = ['true', '1', 'True', True]
+falsy_values = ['false', '0', 'False', False]
+
 
 class DriversSchema(Schema):
-    own_vehicle = fields.Boolean(truthy=set(['true', '1', 'True']), falsy=set(['false', '0', 'False']))
+    own_vehicle = fields.Boolean(truthy=set(['true', '1', 'True', True]), falsy=set(['false', '0', 'False', False]))
 
 
 class DriverSchema(Schema):
@@ -12,17 +15,44 @@ class DriverSchema(Schema):
     date_of_birth = fields.DateTime(required=True)
     gender_id = fields.Int(required=True)
     cnh_type_id = fields.Int(required=True)
-    own_vehicle = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]), falsy=set(['false', '0', 'False', False]))
+    own_vehicle = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]),
+                                 falsy=set(['false', '0', 'False', False]))
 
 
 class ItinerarieSchema(Schema):
     driver_id = fields.Int(required=True)
-    loaded = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]), falsy=set(['false', '0', 'False', False]))
+    loaded = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]),
+                            falsy=set(['false', '0', 'False', False]))
     truck_type_id = fields.Int(required=True)
-    finished = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]), falsy=set(['false', '0', 'False', False]))
+    finished = fields.Boolean(required=True, truthy=set(['true', '1', 'True', True]),
+                              falsy=set(['false', '0', 'False', False]))
     load_date_time = fields.DateTime(required=True)
     unload_date_time = fields.DateTime(required=True)
     origin_address = fields.Str(required=True)
     destination_address = fields.Str(required=True)
     origin_street_number = fields.Str(required=True)
     destination_street_number = fields.Str(required=True)
+
+
+class FinishItinerarie(Schema):
+    itinerarie_id = fields.Int(required=True)
+
+
+class GetItinerariesSchema(Schema):
+    initial_load_period = fields.DateTime()
+    final_load_period = fields.DateTime()
+    truck_type = fields.Int()
+    loaded = fields.Boolean(truthy=set(truthy_values), falsy=set(falsy_values))
+    finished = fields.Boolean(truthy=set(truthy_values), falsy=set(falsy_values))
+    state = fields.Str()
+    city = fields.Str()
+
+
+class GetGroupedItinerariesSchema(Schema):
+    loaded = fields.Boolean(truthy=truthy_values, falsy=falsy_values)
+    periodical_type = fields.Str(required=True, validate=[lambda x: x in ['monthly', 'daily', 'yearly']],
+                              error_messages={
+                                    'validator_failed': 'Use a periodical type \'monthly, daily or yearly\' value on periodical_type parameter',
+                                })
+    initial_load_period = fields.DateTime(required=True)
+    final_load_period = fields.DateTime(required=True)
