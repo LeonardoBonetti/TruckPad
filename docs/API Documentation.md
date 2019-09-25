@@ -12,20 +12,20 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 
 ### Métodos
 - **Driver**
-    - [get_drivers](#get_drivers): Retorna uma lista de todos os motoristas.
-    - [get_driver](#get_driver): Retorna um motorista a partir de seu ID.
-    - [register_driver](#register_driver): Cadastra um motorista no sistema.
-    - [update_driver](#update_driver): Atualiza os dados  de um motorista no sistema.
+    - [get_drivers](#get_drivers): Retorna uma lista de motoristas.
+    - [get_driver](#get_driver): Retorna um motorista.
+    - [register_driver](#register_driver): Cadastra um motorista.
+    - [update_driver](#update_driver): Atualiza os dados do motorista.
 
 - **Itinerarie**
-    - [get_itineraries](#get_itineraries): Retorna uma lista de itinerários cadastrados a partir de alguns filtros.
-    - [register_itinerarie](#register_itinerarie): Cadastra um itinerário no sistema.
-    - [finish_itinerarie](#finish_itinerarie): Finaliza um itinerári.
-    - [get_periodical_itineraries_report](#get_periodical_itineraries_report): Agrupa e contabiliza o número itinerários(motoristas que passaram pelo terminal).
+    - [get_itineraries](#get_itineraries): Retorna uma lista de itinerários cadastrados.
+    - [register_itinerarie](#register_itinerarie): Cadastra um itinerário.
+    - [finish_itinerarie](#finish_itinerarie): Finaliza um itinerário.
+    - [get_periodical_itineraries_report](#get_periodical_itineraries_report): Agrupa e contabiliza o número de itinerários.
 
 **get_drivers**
 ----
-  Retorna uma lista de motoristas e suas informações, possui um parâmetro `boolean` *own_vehicle* que filtra motoristas que possuem veículo próprio ou não.
+  Retorna uma lista de motoristas e suas informações. Possui um parâmetro opcional `own_vehicle=[boolean]` que serve para saber quantos caminhoneiros tem veiculo próprio.
 
 * **URL**
 
@@ -43,7 +43,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
    
    **Optional:**
  
-   `own_vehicle=[boolean]`
+   `own_vehicle=[boolean]` : Veículo próprio?
 
 * **Data Params**
 
@@ -111,7 +111,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
   
 **get_driver**
 ----
-  Busca um motorista e suas informações a partir de seu ID
+  Retorna as informações de um único motorista a partir de seu ID.
 
 * **URL**
 
@@ -125,7 +125,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
  
    **Required:**
 
-   `driver_id=[int]`
+   `driver_id=[int]` : `ID` do motorista
    
     **Optional:**
     
@@ -189,7 +189,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
   
 **register_driver**
 ----
-  Cadastra um novo motorista no sistema a partir de informações no formato `application/json` inseridas no `request body`
+  Cadastra um motorista.
 
 * **URL**
 
@@ -246,6 +246,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 * **Error Response:**
 
   * **Code:** 400 BAD REQUEST <br />
+  
     **Content:** 
     ```
     {
@@ -256,7 +257,8 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
     }
     ```
     
-   * **Code:** 400 BAD REQUEST <br />
+  * **Code:** 400 BAD REQUEST <br />
+   
     **Content:** 
     ```
     {
@@ -280,7 +282,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
   
 **update_driver**
 ----
-  Atualiza os dados do motorista de acordo com as informações passadas  no `request body`
+  Atualiza os dados do motorista.
 
 * **URL**
 
@@ -294,7 +296,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 
     **Required:**
 
-    None
+     `driver_id=[int]` : `ID` do motorista
    
     **Optional:**
     
@@ -348,7 +350,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
     }
     ```
     
-   * **Code:** 400 BAD REQUEST <br />
+  * **Code:** 400 BAD REQUEST <br />
    
     **Content:** 
     ```
@@ -361,7 +363,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 
   ```javascript
     $.ajax({
-      url: "localhost/api/v1.0/drivers/:driver_id",
+      url: "localhost/api/v1.0/drivers/<driver_id>"",
       dataType: "json",
       type : "PUT",
       data: JSON.stringify(data),
@@ -391,23 +393,23 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
    
     **Optional:**
  
-   `initial_load_period=[datetime]`
+   `initial_load_period=[datetime]` : Início do itinerário
    
-   `final_load_period=[datetime]`
+   `final_load_period=[datetime]` : Fim do itinerário
    
-   `truck_type=[int]`
+   `truck_type=[int]` : Tipo do caminhão (olhar no final da página)
    
-   `loaded=[boolean]`
+   `loaded=[boolean]` : Caminhão carregado ?
    
-   `finished=[boolean]`
+   `finished=[boolean]` : Finalizado ?
    
-   `origin_state=[string]`
+   `origin_state=[string]` : Estado de origem
    
-   `origin_city=[string]`
+   `origin_city=[string]` : Cidade de origem
    
-   `destination_state=[string]`
+   `destination_state=[string]` : Estado de destino
    
-   `destination_city=[string]`
+   `destination_city=[string]` : Cidade de destino
 
 * **Data Params**
 
@@ -485,7 +487,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
   
 **register_itinerarie**
 ----
-  Cadastra um novo itinerário no sistema a partir de informações no formato `application/json` inseridas no `request body`
+  Cadastra um novo itinerário.
 
 * **URL**
 
@@ -576,7 +578,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
     }
     ```
     
-   * **Code:** 400 BAD REQUEST <br />
+  * **Code:** 400 BAD REQUEST <br />
    
     **Content:** 
     ```
@@ -615,7 +617,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 
     **Required:**
 
-    `itinerarie_id=[int]`
+    `itinerarie_id=[int]` : `ID` do itinerário
    
     **Optional:**
     
@@ -680,7 +682,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
     }
     ```
     
-   * **Code:** 404 BAD REQUEST <br />
+  * **Code:** 404 BAD REQUEST <br />
    
     **Content:** 
     ```
@@ -718,15 +720,15 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 
    **Required:**
    
-   `periodical_type=[string]`
+   `periodical_type=[string]` : Tipo periódico (`monthly`, `daily`, `yearly`)
    
-   `initial_load_period=[datetime]`
+   `initial_load_period=[datetime]`: Período inicial do relatório
    
-   `final_load_period=[datetime]`
+   `final_load_period=[datetime]` : Período final do relatório
    
     **Optional:**
  
-   `loaded=[boolean]`
+   `loaded=[boolean]` : Caminhão carregado ?
 
 
 * **Data Params**
@@ -796,6 +798,40 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
     });
   ```
   
-  
+
+
+#### Dados estáticos:
+
+
+##### Tipos de caminhão (truck_type)
+
+| ID | Description            |
+|---------------|------------------------|
+| 1             | Caminhão 3/4           |
+| 2             | Caminhão Toco          |
+| 3             | Caminhão Truck         |
+| 4             | Carreta Simples        |
+| 5             | Carreta Eixo Extendido |
+<br>
+
+ ##### Tipos de CNH (cnh_type)
+
+| ID | Description |
+|---------------|-------------|
+| 1             | A           |
+| 2             | B           |
+| 3             | C           |
+| 4             | D           |
+| 5             | E           |
+<br>
+
+##### Tipos de gênero (gender_type)
+
+| ID | Description |
+|---------------|-------------|
+| 1             | Masculino   |
+| 2             | Feminino    |
+| 3             | Outro       |
+<br>
   
   
