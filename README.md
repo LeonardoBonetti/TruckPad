@@ -2,7 +2,7 @@
 A API que conecta o Caminhoneiro à Carga
 
 ## Como rodar o Projeto
- 1. [Configurar o banco de dados](https://github.com/LeonardoBonetti/TruckPad#database-configuration)
+ 1. [Configurar o banco de dados](https://github.com/LeonardoBonetti/TruckPad#configura%C3%A7%C3%A3o-do-banco-de-dados)
  2. Instale as dependências `pip install -r requirements.txt `
  3. Inicie o projeto `python run.py`
 
