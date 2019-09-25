@@ -7,7 +7,7 @@ A API que conecta o Caminhoneiro à Carga
  3. Inicie o projeto `python run.py`
 
 ## Documentação da API
-[Documentação das requisições](https://github.com/LeonardoBonetti/TruckPad/blob/master/API%20Documentation.md)
+[Documentação da API](https://github.com/LeonardoBonetti/TruckPad/blob/master/docs/API%20Documentation.md)
 
 ## Configuração do banco de dados
  1. Você irá precisar do MYSQL Server
