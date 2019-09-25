@@ -27,8 +27,6 @@ class ItinerarieSchema(Schema):
     unload_date_time = fields.DateTime(required=True)
     origin_address = fields.Str(required=True)
     destination_address = fields.Str(required=True)
-    origin_street_number = fields.Str(required=True)
-    destination_street_number = fields.Str(required=True)
 
 
 class FinishItinerarie(Schema):
@@ -55,3 +53,4 @@ class PeriodicalItinerariesReportSchema(Schema):
                                 })
     initial_load_period = fields.DateTime(required=True)
     final_load_period = fields.DateTime(required=True)
+

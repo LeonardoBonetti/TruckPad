@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 
 from app.dao import DriverDao, ItinerarieDao
 from app.models import Driver, Itinerarie, ItinerariesPeriodicalReport
-from app.gmaps import Address
+from app.gmaps import Address, address_info
 from app.schema_validation import (
     DriverSchema, DriversSchema, ItinerarieSchema, FinishItinerarie, GetItinerariesSchema,
     PeriodicalItinerariesReportSchema
@@ -127,13 +127,19 @@ def register_itinerarie():
         request_json.get("truck_type_id", None),
         request_json.get("finished", None),
         request_json.get("load_date_time", None),
-        request_json.get("unload_date_time", None),
-        Address(request_json.get("origin_address", None), request_json.get("origin_street_number", None)),
-        Address(request_json.get("destination_address", None), request_json.get("destination_street_number", None))
+        request_json.get("unload_date_time", None)
     )
-    itinerarie.load_addresses_info()
-    itinerarie.origin_address = itinerarie_dao.save_address(itinerarie.origin_address)
-    itinerarie.destination_address = itinerarie_dao.save_address(itinerarie.destination_address)
+
+    origin_address = address_info(request_json.get("origin_address", None))
+    destination_address = address_info(request_json.get("destination_address", None))
+
+    if origin_address is None or destination_address is None:
+        return make_response(
+            jsonify({'return_message': 'Invalid address data, use: <address> <street_number> <neighborhood> <city> <state>  example: Av. Brigadeiro luis antonio 1503 Bela Vista São Paulo SP'}),
+            400)
+
+    itinerarie.origin_address = itinerarie_dao.save_address(origin_address)
+    itinerarie.destination_address = itinerarie_dao.save_address(destination_address)
     itinerarie = itinerarie_dao.save_itinerarie(itinerarie)
     return jsonify({'itinerarie': itinerarie.to_json(), 'return_message': 'Itinerarie Registered'}), 201
 
@@ -208,4 +214,6 @@ def get_periodical_itineraries_report():
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'return_message': error.description['message']}), 404)
+    if isinstance(error.description, dict) and 'message' in error.description.keys():
+        return make_response(jsonify({'return_message': error.description['message']}), 404)
+    return make_response(jsonify({'return_message': error.description}), 404)

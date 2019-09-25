@@ -1,14 +1,15 @@
 import googlemaps
 
 class Address:
-    def __init__(self, address=None, street_number=None, lat=None, lng=None, state=None, city=None, id=None):
-        self.id = id
-        self.address = address
-        self.street_number = street_number
-        self.lat = lat
-        self.lng = lng
-        self.state = state
-        self.city = city
+    def __init__(self):
+        self.id = None
+        self.address = None
+        self.street_number = None
+        self.lat = None
+        self.lng = None
+        self.state = None
+        self.city = None
+
 
     def simples_address(self):
         return "{} {}".format(self.address, self.street_number)
@@ -60,7 +61,12 @@ def geocode_info_to_location(geocode_info):
     geometry_info = geocode_info[0]['geometry']
     gloc.lat = geometry_info['location']['lat']
     gloc.lng = geometry_info['location']['lng']
-    return gloc
+
+    if gloc.state is None or gloc.city is None or gloc.street_number is None or gloc.address is None or gloc.lat is None or gloc.lng is None:
+        return None
+
+    else:
+        return gloc
 
 
 # coordinates_info(-23.5100646, -46.54488689999999)

@@ -25,22 +25,17 @@ class Driver:
 
 class Itinerarie:
     def __init__(self, driver_id, loaded, truck_type_id, finished,
-                 load_date_time, unload_date_time, origin_address, destination_address, id=None,
-                 truck_type_description=None):
-        self.id = id
+                 load_date_time, unload_date_time):
+        self.id = None
         self.driver_id = driver_id
         self.loaded = loaded
         self.truck_type_id = truck_type_id
-        self.truck_type_description = truck_type_description
+        self.truck_type_description = None
         self.finished = finished
         self.load_date_time = load_date_time
         self.unload_date_time = unload_date_time
-        self.origin_address = origin_address
-        self.destination_address = destination_address
-
-    def load_addresses_info(self):
-        self.origin_address = gmaps.address_info(self.origin_address.simples_address())
-        self.destination_address = gmaps.address_info(self.destination_address.simples_address())
+        self.origin_address = None
+        self.destination_address = None
 
     def to_json(self):
         return {
