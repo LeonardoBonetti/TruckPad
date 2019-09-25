@@ -80,7 +80,7 @@ class ItinerarieDao:
 
     def get_itinerarie_by_id(self, id):
         cursor = self.__db.connection.cursor()
-        cursor.callproc('GetItineraries', [None, None, None, None, None, id])
+        cursor.callproc('GetItineraries', [None, None, None, None, None, None, None, None, None, id])
         dict_list = recordset_to_dict(cursor)
         if len(dict_list) == 0:
             return None
@@ -92,10 +92,12 @@ class ItinerarieDao:
         self.__db.connection.cursor().execute(SQL_FINISH_ITINERARIE, (itinerarie.id,))
         self.__db.connection.commit()
 
-    def get_itineraries(self, initial_load_period, final_load_period, truck_type, loaded, finished, state, city):
+    def get_itineraries(self, initial_load_period, final_load_period, truck_type, loaded, finished, origin_state,
+                        origin_city, destination_state, destination_city):
         cursor = self.__db.connection.cursor()
         cursor.callproc('GetItineraries',
-                        [initial_load_period, final_load_period, truck_type, loaded, finished, state, city, None])
+                        [initial_load_period, final_load_period, truck_type, loaded, finished, origin_state,
+                         origin_city, destination_state, destination_city, None])
         dict_list = recordset_to_dict(cursor)
         itineraries = []
         for i in range(0, dict_list.__len__()):

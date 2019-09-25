@@ -41,8 +41,10 @@ class GetItinerariesSchema(Schema):
     truck_type = fields.Int()
     loaded = fields.Boolean(truthy=set(truthy_values), falsy=set(falsy_values))
     finished = fields.Boolean(truthy=set(truthy_values), falsy=set(falsy_values))
-    state = fields.Str()
-    city = fields.Str()
+    origin_state = fields.Str()
+    origin_city = fields.Str()
+    destination_state = fields.Str()
+    destination_city = fields.Str()
 
 
 class PeriodicalItinerariesReportSchema(Schema):

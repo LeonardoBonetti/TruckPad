@@ -5,7 +5,8 @@ from app.dao import DriverDao, ItinerarieDao
 from app.models import Driver, Itinerarie, ItinerariesPeriodicalReport
 from app.gmaps import Address
 from app.schema_validation import (
-    DriverSchema, DriversSchema, ItinerarieSchema, FinishItinerarie, GetItinerariesSchema, PeriodicalItinerariesReportSchema
+    DriverSchema, DriversSchema, ItinerarieSchema, FinishItinerarie, GetItinerariesSchema,
+    PeriodicalItinerariesReportSchema
 )
 from app.helpers import str_to_bool
 
@@ -23,14 +24,12 @@ finish_itinerarie_schema = FinishItinerarie()
 get_itineraries_schema = GetItinerariesSchema()
 periodical_itineraries_report_schema = PeriodicalItinerariesReportSchema()
 
-# Pesquisa pelos motoristas com um parâmetro
+
 @app.route('/api/v1.0/drivers', methods=['GET'])
 def get_drivers():
     errors = get_drivers_schema.validate(request.args)
     if errors:
-        return make_response(
-            jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),
-            400)
+        return make_response(jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),400)
 
     has_own_vehicle = str_to_bool(request.args.get('own_vehicle', None))
 
@@ -49,12 +48,14 @@ def get_driver(driver_id):
     if driver:
         return jsonify({'driver': driver.to_json()}), 200
     else:
-        abort(404, {'message': 'Driver do not exist'})
+        abort(404, {'message': 'Driver does not exist'})
 
 
 @app.route('/api/v1.0/drivers', methods=['POST'])
 def register_driver():
-    if request.get_json() is None:
+    try:
+        request_json = request.get_json()
+    except Exception as e:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
 
     errors = driver_schema.validate(request.get_json())
@@ -78,10 +79,11 @@ def register_driver():
 
 @app.route('/api/v1.0/drivers/<int:driver_id>', methods=['PUT'])
 def update_driver(driver_id):
-    if request.get_json() is None:
+    try:
+        json_to_validade = request.get_json()
+    except Exception as e:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
 
-    json_to_validade = request.get_json()
     json_to_validade['driver_id'] = driver_id
     errors = driver_schema.validate(json_to_validade)
     if errors:
@@ -104,14 +106,16 @@ def update_driver(driver_id):
         driver = driver_dao.save_driver(driver)
         return jsonify({'driver': driver.to_json(), 'return_message': 'Driver Updated'}), 200
     else:
-        abort(404, {'message': 'Driver do not exist'})
+        abort(404, {'message': 'Driver does not exist'})
 
 
 @app.route('/api/v1.0/itineraries', methods=['POST'])
 def register_itinerarie():
-    if request.get_json() is None:
+    try:
+        request_json = request.get_json()
+    except Exception as e:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
-    request_json = request.get_json()
+
     errors = register_itinerarie_schema.validate(request_json)
     if errors:
         return make_response(
@@ -148,7 +152,7 @@ def finish_itinerarie(itinerarie_id):
         itinerarie.finished = True
         return jsonify({'itinerarie': itinerarie.to_json(), 'return_message': 'Itinerarie Finished'}), 200
     else:
-        abort(404)
+        abort(404, {'message': 'Itinerarie does not exist'})
 
 
 @app.route('/api/v1.0/itineraries', methods=['GET'])
@@ -164,18 +168,20 @@ def get_itineraries():
     truck_type = request.args.get('truck_type', None)
     loaded = request.args.get('loaded', None)
     finished = request.args.get('finished', None)
-    state = request.args.get('state', None)
-    city = request.args.get('city', None)
+    origin_state = request.args.get('origin_state', None)
+    origin_city = request.args.get('origin_city', None)
+    destination_state = request.args.get('destination_state', None)
+    destination_city = request.args.get('destination_city', None)
 
     itineraries = itinerarie_dao.get_itineraries(initial_load_period, final_load_period, truck_type, loaded, finished,
-                                                 state, city)
+                                                 origin_state, origin_city, destination_state, destination_city)
     itineraries_json = []
     for itinerarie in itineraries:
         itineraries_json.append(itinerarie.to_json())
     return jsonify({'meta': {'total_itineraries': itineraries_json.__len__()}, 'itineraries': itineraries_json}), 200
 
 
-@app.route('/api/v1.0/itineraries/grouped', methods=['GET'])
+@app.route('/api/v1.0/itineraries/periodical', methods=['GET'])
 def get_periodical_itineraries_report():
     errors = periodical_itineraries_report_schema.validate(request.args)
     if errors:
@@ -188,9 +194,11 @@ def get_periodical_itineraries_report():
     initial_load_period = request.args.get('initial_load_period', None)
     final_load_period = request.args.get('final_load_period', None)
 
-    periodic_reports = itinerarie_dao.get_itineraries_periodic_reports(periodical_type, loaded, initial_load_period, final_load_period)
+    periodic_reports = itinerarie_dao.get_itineraries_periodic_reports(periodical_type, loaded, initial_load_period,
+                                                                       final_load_period)
 
-    itineraries_report = ItinerariesPeriodicalReport(periodical_type, initial_load_period, final_load_period, loaded, [] )
+    itineraries_report = ItinerariesPeriodicalReport(periodical_type, initial_load_period, final_load_period, loaded,
+                                                     [])
 
     for periodic in periodic_reports:
         itineraries_report.periodic_reports.append(periodic.to_json())
