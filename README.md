@@ -25,12 +25,3 @@ A API que conecta o Caminhoneiro à Carga
      ```
      mysql -u <myuser> -p < sqldb_create.sql
      ```
-
-
-## Dependencias
- - pip3 install flask_mysqldb==0.2.0
- - pip3 install Flask==0.12.2
-
-## Run Project
-
-- PYTHONPATH=. python run.py
