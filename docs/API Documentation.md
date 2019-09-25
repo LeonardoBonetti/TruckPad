@@ -512,16 +512,14 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
   * **Data Object:** 
   ```
   {
-    "driver_id": 2,
-    "loaded": false,
+    "driver_id": 1,
+    "loaded": true,
     "truck_type_id": 2,
-    "load_date_time": "2020-08-26 00:00:00",
-    "unload_date_time": "2020-08-30 00:00:00",
+    "load_date_time": "2019-12-26 00:00:00",
+    "unload_date_time": "2019-12-28 00:00:00",
     "finished":false,
-    "origin_address":"Rua Tenente Otavio Gomes",
-    "destination_address": "Rua Oswaldo Cruz",
-    "origin_street_number":"330",
-    "destination_street_number":"400"
+    "origin_address":"Rua Fidêncio Ramos, 302 - 12o andar - Vila Olímpia, São Paulo - SP",
+    "destination_address": "Rua Minas Gerais, 316,  Higienópolis, São Paulo - SP"
   }
   ```
 
@@ -534,13 +532,13 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
     {
       "itinerarie": {
         "destination_address": {
-          "address": "Rua Oswaldo Cruz",
-          "city": "Itaperuna",
+          "address": "Rua Minas Gerais",
+          "city": "São Paulo",
           "id": 51,
           "lat": -21.2157926,
           "lng": -41.8892951,
-          "state": "RJ",
-          "street_number": "400"
+          "state": "SP",
+          "street_number": "316"
         },
         "driver_id": 2,
         "finished": false,
@@ -548,13 +546,13 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
         "load_date_time": "2020-08-26 00:00:00",
         "loaded": false,
         "origin_address": {
-          "address": "Rua Tenente Otávio Gomes",
+          "address": "R Fidêncio Ramos",
           "city": "São Paulo",
-          "id": 50,
+          "id": 1,
           "lat": -23.5635301,
           "lng": -46.6308941,
           "state": "SP",
-          "street_number": "330"
+          "street_number": "302 - 12o andar"
         },
         "truck_type_description": null,
         "truck_type_id": 2,
@@ -586,6 +584,16 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
       "return_message": "JSON Object not found"
     }
     ```
+    
+  * **Code:** 400 BAD REQUEST <br />
+   
+    **Content:** 
+    ```
+    {
+      "return_message": "Invalid address data, use: <address> <street_number> <neighborhood> <city> <state>  example: Av. Brigadeiro luis antonio 1503 Bela Vista São Paulo SP"
+    }
+    ```
+
 
 * **Sample Call:**
 
