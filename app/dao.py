@@ -159,27 +159,31 @@ def sql_itinerarie_to_obj(sql_obj):
         sql_obj.get('TruckTypeID', None),
         sql_obj.get('Finished', None),
         sql_obj.get('LoadDateTime', None),
-        sql_obj.get('UnLoadDateTime', None),
-        Address(
-            sql_obj.get('OrigAddress', None),
-            sql_obj.get('OrigStreetNumber', None),
-            sql_obj.get('OrigLatitude', None),
-            sql_obj.get('OrigLongitude', None),
-            sql_obj.get('OrigState', None),
-            sql_obj.get('OrigCity', None),
-            sql_obj.get('OrigAdressID', None)
-        ),
-        Address(
-            sql_obj.get('DestAddress', None),
-            sql_obj.get('DestStreetNumber', None),
-            sql_obj.get('DestLatitude', None),
-            sql_obj.get('DestLongitude', None),
-            sql_obj.get('DestState', None),
-            sql_obj.get('DestCity', None),
-            sql_obj.get('DestAdressID', None)
-        ),
-        sql_obj.get('IDItinerarie', None),
-        sql_obj.get('TruckTypeDescription', None))
+        sql_obj.get('UnLoadDateTime', None))
+
+    origin_address = Address()
+    origin_address.address = sql_obj.get('OrigAddress', None)
+    origin_address.street_number = sql_obj.get('OrigStreetNumber', None)
+    origin_address.lat = sql_obj.get('OrigLatitude', None)
+    origin_address.lng = sql_obj.get('OrigLongitude', None)
+    origin_address.state = sql_obj.get('OrigState', None)
+    origin_address.city = sql_obj.get('OrigCity', None)
+    origin_address.id = sql_obj.get('OrigAdressID', None)
+
+    destination_address = Address()
+    destination_address.address = sql_obj.get('DestAddress', None)
+    destination_address.street_number = sql_obj.get('DestStreetNumber', None)
+    destination_address.lat = sql_obj.get('DestLatitude', None)
+    destination_address.lng = sql_obj.get('DestLongitude', None)
+    destination_address.state = sql_obj.get('DestState', None)
+    destination_address.city = sql_obj.get('DestCity', None)
+    destination_address.id = sql_obj.get('DestAdressID', None)
+
+    itinerarie.id = sql_obj.get('IDItinerarie', None)
+    itinerarie.truck_type_description = sql_obj.get('TruckTypeDescription', None)
+    itinerarie.origin_address = origin_address
+    itinerarie.destination_address = destination_address
+
     return itinerarie
 
 

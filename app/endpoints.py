@@ -25,11 +25,14 @@ get_itineraries_schema = GetItinerariesSchema()
 periodical_itineraries_report_schema = PeriodicalItinerariesReportSchema()
 
 
+# Tested
 @app.route('/api/v1.0/drivers', methods=['GET'])
 def get_drivers():
     errors = get_drivers_schema.validate(request.args)
     if errors:
-        return make_response(jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),400)
+        return make_response(
+            jsonify({'return_message': 'There is some erros in your request see errors_field', 'errors_field': errors}),
+            400)
 
     has_own_vehicle = str_to_bool(request.args.get('own_vehicle', None))
 
@@ -57,7 +60,11 @@ def register_driver():
         request_json = request.get_json()
     except Exception as e:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
+    # If to validate by test_register_driver_json_not_exist, need to be improved
+    if request.get_json() is None:
+        return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
 
+    json__ = request.get_json()
     errors = driver_schema.validate(request.get_json())
     if errors:
         return make_response(
@@ -82,6 +89,9 @@ def update_driver(driver_id):
     try:
         json_to_validade = request.get_json()
     except Exception as e:
+        return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
+    # If to validate by test_register_driver_json_not_exist, need to be improved
+    if request.get_json() is None:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
 
     json_to_validade['driver_id'] = driver_id
@@ -115,6 +125,9 @@ def register_itinerarie():
         request_json = request.get_json()
     except Exception as e:
         return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
+    # If to validate by test_register_driver_json_not_exist, need to be improved
+    if request.get_json() is None:
+        return make_response(jsonify({'return_message': 'JSON Object not found'}), 400)
 
     errors = register_itinerarie_schema.validate(request_json)
     if errors:
@@ -135,7 +148,8 @@ def register_itinerarie():
 
     if origin_address is None or destination_address is None:
         return make_response(
-            jsonify({'return_message': 'Invalid address data, use: <address> <street_number> <neighborhood> <city> <state>  example: Av. Brigadeiro luis antonio 1503 Bela Vista São Paulo SP'}),
+            jsonify({
+                        'return_message': 'Invalid address data, use: <address> <street_number> <neighborhood> <city> <state>  example: Av. Brigadeiro luis antonio 1503 Bela Vista São Paulo SP'}),
             400)
 
     itinerarie.origin_address = itinerarie_dao.save_address(origin_address)
@@ -172,8 +186,8 @@ def get_itineraries():
     initial_load_period = request.args.get('initial_load_period', None)
     final_load_period = request.args.get('final_load_period', None)
     truck_type = request.args.get('truck_type', None)
-    loaded = request.args.get('loaded', None)
-    finished = request.args.get('finished', None)
+    loaded = str_to_bool(request.args.get('loaded', None))
+    finished = str_to_bool(request.args.get('finished', None))
     origin_state = request.args.get('origin_state', None)
     origin_city = request.args.get('origin_city', None)
     destination_state = request.args.get('destination_state', None)
@@ -196,7 +210,7 @@ def get_periodical_itineraries_report():
             400)
 
     periodical_type = request.args.get('periodical_type', None)
-    loaded = request.args.get('loaded', None)
+    loaded = str_to_bool(request.args.get('loaded', None))
     initial_load_period = request.args.get('initial_load_period', None)
     final_load_period = request.args.get('final_load_period', None)
 

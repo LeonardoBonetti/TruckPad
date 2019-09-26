@@ -1,5 +1,6 @@
 import googlemaps
 
+
 class Address:
     def __init__(self):
         self.id = None
@@ -10,6 +11,15 @@ class Address:
         self.state = None
         self.city = None
 
+    def __eq__(self, other):
+        if not isinstance(other, Address):
+            return False
+        return self.address == other.address and \
+               self.street_number == other.street_number and \
+               self.lat == other.lat and \
+               self.lng == other.lng and \
+               self.state == other.state and \
+               self.city == other.city
 
     def simples_address(self):
         return "{} {}".format(self.address, self.street_number)
@@ -26,7 +36,7 @@ class Address:
         }
 
 
-gmaps = googlemaps.Client(key='AIzaSyA5j12KynK_TmVxz4K0zOiX3cWCQAxhYMA')
+gmaps = googlemaps.Client(key='Add Your Key here')
 
 
 def coordinates_info(lat, lng):
@@ -36,6 +46,8 @@ def coordinates_info(lat, lng):
 
 def address_info(address):
     geocode_info = gmaps.geocode(address)
+    if geocode_info.__len__() == 0:
+        return None
     return geocode_info_to_location(geocode_info)
 
 
@@ -67,7 +79,6 @@ def geocode_info_to_location(geocode_info):
 
     else:
         return gloc
-
 
 # coordinates_info(-23.5100646, -46.54488689999999)
 # address_info('Rua Parianas 75')

@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields, validates, ValidationError
 
-truthy_values = ['true', '1', 'True', True]
-falsy_values = ['false', '0', 'False', False]
+truthy_values = ['true', '1', 'True', True, 1]
+falsy_values = ['false', '0', 'False', False, 0]
 
 
 class DriversSchema(Schema):

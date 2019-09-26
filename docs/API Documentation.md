@@ -5,9 +5,9 @@ https://www.getpostman.com/
 
 Após a instalação, você poderá importar a nossa coleção de requisições com toda a configuração pronta através do botão abaixo:
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d72d3fa7fd6e168e69ab)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/a65213c7e7a13e738113)
 
-Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/run-collection/d72d3fa7fd6e168e69ab
+Caso não consiga ver o botão utilize este link para importar diretamente do software, clicando no botão "import" no lado superior esquerdo  https://www.getpostman.com/collections/a65213c7e7a13e738113
 
 
 ### Métodos
@@ -716,6 +716,7 @@ Caso não consiga ver o botão utilize este link:  https://app.getpostman.com/ru
 **get_periodical_itineraries_report**
 ----
  Retorna o número de itinerários agrupados por um tipo periódico (diário, mensal e anual), o parâmetro `periodical_type` é obrigatório e aceita os valores: `monthly`, `daily` e `yearly`, assim como o intervalo de carga do itinerário `initial_load_period` e `final_load_period`.
+
 * **URL**
 
   /api/v1.0/itineraries/periodical
