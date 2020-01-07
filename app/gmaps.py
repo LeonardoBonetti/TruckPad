@@ -36,7 +36,7 @@ class Address:
         }
 
 
-gmaps = googlemaps.Client(key='Add Your Key here')
+gmaps = googlemaps.Client(key='AIzaSyA5j12KynK_TmVxz4K0zOiX3cWCQAxhYMA')
 
 
 def coordinates_info(lat, lng):

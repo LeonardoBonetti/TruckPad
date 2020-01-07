@@ -25,7 +25,7 @@ get_itineraries_schema = GetItinerariesSchema()
 periodical_itineraries_report_schema = PeriodicalItinerariesReportSchema()
 
 
-# Tested
+
 @app.route('/api/v1.0/drivers', methods=['GET'])
 def get_drivers():
     errors = get_drivers_schema.validate(request.args)
