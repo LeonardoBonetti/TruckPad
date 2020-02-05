@@ -10,9 +10,24 @@ from app.schema_validation import (
 )
 from app.helpers import str_to_bool
 
+from flask_swagger_ui import get_swaggerui_blueprint
+
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 db = MySQL(app)
+
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/swagger.json'
+
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "TruckPad API"
+    }
+)
+
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 driver_dao = DriverDao(db)
 itinerarie_dao = ItinerarieDao(db)

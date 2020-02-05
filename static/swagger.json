@@ -1,0 +1,15 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "Leonardo Bonetti",
+        "version": "1.0.0",
+        "title": "TruckPad API",
+        "contact": {
+            "email": "leonardo.bonetti.silva@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    }
+}
