@@ -5,7 +5,7 @@ A API que conecta o Caminhoneiro à Carga :truck: :factory:
  
  `docker-compose` possui as imagens [python 3](https://hub.docker.com/_/python), [mysql](https://hub.docker.com/_/mysql) e [adminer](https://hub.docker.com/_/adminer).
 
- Para rodar o projeto, execute: 
+ Suba o compose: 
 
  `docker-compose up -d` 
 
